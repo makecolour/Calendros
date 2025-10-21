@@ -12,16 +12,9 @@
             </a>
 
             <flux:navlist variant="outline">
-                @if(auth()->user()->is_admin)
-                    <flux:navlist.group :heading="__('Administration')" class="grid">
-                        <flux:navlist.item icon="chart-bar" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>{{ __('Admin Dashboard') }}</flux:navlist.item>
-                        <flux:navlist.item icon="users" :href="route('dashboard')" :current="request()->routeIs('dashboard') && !request()->routeIs('admin.*')" wire:navigate>{{ __('My Dashboard') }}</flux:navlist.item>
-                    </flux:navlist.group>
-                @else
-                    <flux:navlist.group :heading="__('Platform')" class="grid">
-                        <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                    </flux:navlist.group>
-                @endif
+                <flux:navlist.group :heading="__('Platform')" class="grid">
+                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                </flux:navlist.group>
             </flux:navlist>
 
             <flux:spacer />
@@ -45,30 +38,21 @@
                     data-test="sidebar-menu-button"
                 />
 
-                <flux:menu class="w-[260px]">
+                <flux:menu class="w-[220px]">
                     <flux:menu.radio.group>
                         <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-2 py-2.5 text-start">
-                                <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg">
+                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
+                                <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
                                     <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 text-sm font-semibold text-white"
+                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
                                     >
                                         {{ auth()->user()->initials() }}
                                     </span>
                                 </span>
 
-                                <div class="grid flex-1 text-start leading-tight">
-                                    <span class="truncate font-semibold text-gray-900 dark:text-white">
-                                        {{ auth()->user()->name }}
-                                    </span>
-                                    <span class="truncate text-xs text-gray-600 dark:text-gray-400">
-                                        {{ auth()->user()->email }}
-                                    </span>
-                                    @if(auth()->user()->is_admin)
-                                        <span class="mt-1 inline-flex w-fit items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/20 dark:text-red-400">
-                                            Admin
-                                        </span>
-                                    @endif
+                                <div class="grid flex-1 text-start text-sm leading-tight">
+                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
+                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
                                 </div>
                             </div>
                         </div>
@@ -77,19 +61,14 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item :href="route('profile.edit')" icon="user-circle" wire:navigate>
-                            {{ __('My Profile') }}
-                        </flux:menu.item>
-                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
-                            {{ __('Settings') }}
-                        </flux:menu.item>
+                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />
 
                     <form method="POST" action="{{ route('logout') }}" class="w-full">
                         @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20" data-test="logout-button">
+                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full" data-test="logout-button">
                             {{ __('Log Out') }}
                         </flux:menu.item>
                     </form>
@@ -109,30 +88,21 @@
                     icon-trailing="chevron-down"
                 />
 
-                <flux:menu class="w-[260px]">
+                <flux:menu>
                     <flux:menu.radio.group>
                         <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-2 py-2.5 text-start">
-                                <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg">
+                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
+                                <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
                                     <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 text-sm font-semibold text-white"
+                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
                                     >
                                         {{ auth()->user()->initials() }}
                                     </span>
                                 </span>
 
-                                <div class="grid flex-1 text-start leading-tight">
-                                    <span class="truncate font-semibold text-gray-900 dark:text-white">
-                                        {{ auth()->user()->name }}
-                                    </span>
-                                    <span class="truncate text-xs text-gray-600 dark:text-gray-400">
-                                        {{ auth()->user()->email }}
-                                    </span>
-                                    @if(auth()->user()->is_admin)
-                                        <span class="mt-1 inline-flex w-fit items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/20 dark:text-red-400">
-                                            Admin
-                                        </span>
-                                    @endif
+                                <div class="grid flex-1 text-start text-sm leading-tight">
+                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
+                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
                                 </div>
                             </div>
                         </div>
@@ -141,19 +111,14 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item :href="route('profile.edit')" icon="user-circle" wire:navigate>
-                            {{ __('My Profile') }}
-                        </flux:menu.item>
-                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
-                            {{ __('Settings') }}
-                        </flux:menu.item>
+                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />
 
                     <form method="POST" action="{{ route('logout') }}" class="w-full">
                         @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20" data-test="logout-button">
+                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full" data-test="logout-button">
                             {{ __('Log Out') }}
                         </flux:menu.item>
                     </form>
