@@ -39,6 +39,22 @@ class Invite extends Model
     public function accept(): void
     {
         $this->update(['status' => 'accepted']);
+        
+        // Add event to invitee's default calendar with modified title
+        $userCalendar = $this->user->calendars()->where('is_default', true)->first();
+        
+        if ($userCalendar) {
+            $eventOwner = $this->event->calendar->user;
+            
+            $userCalendar->events()->create([
+                'title' => $eventOwner->name . "'s " . $this->event->title,
+                'description' => $this->event->description,
+                'start_time' => $this->event->start_time,
+                'end_time' => $this->event->end_time,
+                'location' => $this->event->location,
+                'is_all_day' => $this->event->is_all_day,
+            ]);
+        }
     }
 
     public function reject(): void
