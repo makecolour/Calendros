@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://http://calendros.test/api",
+            "url": "http://calendros.test/api",
             "description": "Local Development Server"
         },
         {
@@ -19,7 +19,7 @@
         },
         {
             "url": "https://calendros.montserrat.id.vn/api",
-            "description": "Test Server"
+            "description": "Production Server"
         }
     ],
     "paths": {
