@@ -56,7 +56,13 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $user->created_at->format('M d, Y') }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                         <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">Edit</a>
-                                        <button wire:click="confirmDelete({{ $user->id }})" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                                        <button 
+                                            type="button"
+                                            wire:click="deleteUser({{ $user->id }})" 
+                                            wire:confirm="Are you sure you want to delete this user? This action cannot be undone."
+                                            class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                             @empty
@@ -73,19 +79,4 @@
             <div class="mt-4">
                 {{ $users->links() }}
             </div>
-        </div>
-
-        {{-- Delete Confirmation Modal --}}
-        @if ($confirmingUserDeletion)
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Confirm Deletion</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Are you sure you want to delete this user? This action cannot be undone.</p>
-                    <div class="flex justify-end space-x-3">
-                        <button wire:click="$set('confirmingUserDeletion', false)" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg text-sm font-medium">Cancel</button>
-                        <button wire:click="deleteUser" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium">Delete</button>
-                    </div>
-                </div>
-            </div>
-        @endif
 </div>

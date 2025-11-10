@@ -11,30 +11,19 @@ class Index extends Component
     use WithPagination;
 
     public $search = '';
-    public $confirmingCalendarDeletion = false;
-    public $calendarIdToDelete = null;
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    public function confirmDelete($calendarId)
+    public function deleteCalendar($calendarId)
     {
-        $this->confirmingCalendarDeletion = true;
-        $this->calendarIdToDelete = $calendarId;
-    }
-
-    public function deleteCalendar()
-    {
-        $calendar = Calendar::find($this->calendarIdToDelete);
+        $calendar = Calendar::find($calendarId);
         if ($calendar) {
             $calendar->delete();
             session()->flash('message', 'Calendar deleted successfully.');
         }
-        
-        $this->confirmingCalendarDeletion = false;
-        $this->calendarIdToDelete = null;
     }
 
     public function render()

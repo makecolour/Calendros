@@ -11,30 +11,19 @@ class Index extends Component
     use WithPagination;
 
     public $search = '';
-    public $confirmingEventDeletion = false;
-    public $eventIdToDelete = null;
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    public function confirmDelete($eventId)
+    public function deleteEvent($eventId)
     {
-        $this->confirmingEventDeletion = true;
-        $this->eventIdToDelete = $eventId;
-    }
-
-    public function deleteEvent()
-    {
-        $event = Event::find($this->eventIdToDelete);
+        $event = Event::find($eventId);
         if ($event) {
             $event->delete();
             session()->flash('message', 'Event deleted successfully.');
         }
-        
-        $this->confirmingEventDeletion = false;
-        $this->eventIdToDelete = null;
     }
 
     public function render()

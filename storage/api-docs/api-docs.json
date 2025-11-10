@@ -1,0 +1,1605 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Calendros API Documentation",
+        "description": "API documentation for Calendros - A comprehensive calendar management system",
+        "contact": {
+            "email": "support@calendros.example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://http://calendros.test/api",
+            "description": "Local Development Server"
+        },
+        {
+            "url": "https://prm.positive.io.vn/api",
+            "description": "Production Server"
+        },
+        {
+            "url": "https://calendros.montserrat.id.vn/api",
+            "description": "Test Server"
+        }
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register a new user",
+                "description": "Create a new user account and return authentication token",
+                "operationId": "5d4fa5d5607ed675ba93907e1fc94534",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "is_admin": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "datetime",
+                                                    "example": "2025-11-11T10:00:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|abc123token..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The email has already been taken."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login user",
+                "description": "Authenticate user and return token (revokes previous tokens for single-device login)",
+                "operationId": "67d6d0fdd54fba132e1b6f55ca254183",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "is_admin": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|abc123token..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout user",
+                "description": "Revoke the current authentication token",
+                "operationId": "28d48c13fca984400ac8de99f54ee13a",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get authenticated user",
+                "description": "Retrieve the currently authenticated user's information",
+                "operationId": "bc2032a379aa97707ccc61511897c120",
+                "responses": {
+                    "200": {
+                        "description": "User information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "is_admin": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/calendars": {
+            "get": {
+                "tags": [
+                    "Calendars"
+                ],
+                "summary": "List user's calendars",
+                "description": "Get all calendars owned by the authenticated user, ordered by default status and name",
+                "operationId": "e9180bba7d2715f47fcc2c79913890d8",
+                "responses": {
+                    "200": {
+                        "description": "List of calendars",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Personal Calendar"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "My personal events"
+                                                    },
+                                                    "color": {
+                                                        "type": "string",
+                                                        "example": "#4F46E5"
+                                                    },
+                                                    "timezone": {
+                                                        "type": "string",
+                                                        "example": "UTC"
+                                                    },
+                                                    "is_default": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    },
+                                                    "user_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Calendars"
+                ],
+                "summary": "Create a new calendar",
+                "description": "Create a new calendar for the authenticated user",
+                "operationId": "be760f5383cac94d3df8d0b9d0a34c81",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Work Calendar"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Work-related events"
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "#10B981"
+                                    },
+                                    "timezone": {
+                                        "type": "string",
+                                        "example": "America/New_York"
+                                    },
+                                    "is_default": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Calendar created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Work Calendar"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Work-related events"
+                                                },
+                                                "color": {
+                                                    "type": "string",
+                                                    "example": "#10B981"
+                                                },
+                                                "timezone": {
+                                                    "type": "string",
+                                                    "example": "America/New_York"
+                                                },
+                                                "is_default": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/calendars/{id}": {
+            "get": {
+                "tags": [
+                    "Calendars"
+                ],
+                "summary": "Get calendar details",
+                "description": "Retrieve details of a specific calendar (must be owned by authenticated user)",
+                "operationId": "255ba7f7f9fea6ad7ef00d915aa3e2b0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Calendar ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Calendar details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Personal Calendar"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "My personal events"
+                                                },
+                                                "color": {
+                                                    "type": "string",
+                                                    "example": "#4F46E5"
+                                                },
+                                                "timezone": {
+                                                    "type": "string",
+                                                    "example": "UTC"
+                                                },
+                                                "is_default": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Not your calendar"
+                    },
+                    "404": {
+                        "description": "Calendar not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Calendars"
+                ],
+                "summary": "Update calendar",
+                "description": "Update an existing calendar (must be owned by authenticated user)",
+                "operationId": "ef8006d6016af06f555fdf4bc1ff1682",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Calendar ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Calendar"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Updated description"
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "#EF4444"
+                                    },
+                                    "timezone": {
+                                        "type": "string",
+                                        "example": "Europe/London"
+                                    },
+                                    "is_default": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Calendar updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Updated Calendar"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Calendar not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Calendars"
+                ],
+                "summary": "Delete calendar",
+                "description": "Delete a calendar (must be owned by authenticated user). All associated events will also be deleted.",
+                "operationId": "8a8814c27a5c100cc5d870a25a83d623",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Calendar ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Calendar deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Calendar not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/calendars/{calendar_id}/events": {
+            "get": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "List events in a calendar",
+                "description": "Get all events for a specific calendar with optional date range filtering",
+                "operationId": "f16c4fb9230fbca130cb1dc1cb38e9f6",
+                "parameters": [
+                    {
+                        "name": "calendar_id",
+                        "in": "path",
+                        "description": "Calendar ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "filter[start_time][gte]",
+                        "in": "query",
+                        "description": "Filter events starting from this date (ISO 8601 format)",
+                        "schema": {
+                            "type": "string",
+                            "format": "datetime",
+                            "example": "2025-11-01T00:00:00Z"
+                        }
+                    },
+                    {
+                        "name": "filter[end_time][lte]",
+                        "in": "query",
+                        "description": "Filter events ending before this date (ISO 8601 format)",
+                        "schema": {
+                            "type": "string",
+                            "format": "datetime",
+                            "example": "2025-11-30T23:59:59Z"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of events",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "Team Meeting"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Weekly sync"
+                                                    },
+                                                    "start_time": {
+                                                        "type": "string",
+                                                        "format": "datetime",
+                                                        "example": "2025-11-15T10:00:00Z"
+                                                    },
+                                                    "end_time": {
+                                                        "type": "string",
+                                                        "format": "datetime",
+                                                        "example": "2025-11-15T11:00:00Z"
+                                                    },
+                                                    "location": {
+                                                        "type": "string",
+                                                        "example": "Conference Room A"
+                                                    },
+                                                    "is_all_day": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "calendar_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Calendar not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Create a new event",
+                "description": "Create a new event in a specific calendar",
+                "operationId": "d6dfedb9bde45b1145c541b6f9acad36",
+                "parameters": [
+                    {
+                        "name": "calendar_id",
+                        "in": "path",
+                        "description": "Calendar ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "start_time",
+                                    "end_time"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Product Launch"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Launch event details"
+                                    },
+                                    "start_time": {
+                                        "type": "string",
+                                        "format": "datetime",
+                                        "example": "2025-12-01T09:00:00Z"
+                                    },
+                                    "end_time": {
+                                        "type": "string",
+                                        "format": "datetime",
+                                        "example": "2025-12-01T17:00:00Z"
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "Main Auditorium"
+                                    },
+                                    "is_all_day": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Event created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Product Launch"
+                                                },
+                                                "calendar_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/events/{id}": {
+            "get": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Get event details",
+                "description": "Retrieve details of a specific event including calendar and invites",
+                "operationId": "abf4f4bbfe75221b5bab720a701f17b8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Event ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Team Meeting"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Weekly sync"
+                                                },
+                                                "start_time": {
+                                                    "type": "string",
+                                                    "format": "datetime"
+                                                },
+                                                "end_time": {
+                                                    "type": "string",
+                                                    "format": "datetime"
+                                                },
+                                                "location": {
+                                                    "type": "string",
+                                                    "example": "Conference Room A"
+                                                },
+                                                "is_all_day": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "calendar": {
+                                                    "type": "object"
+                                                },
+                                                "invites": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Event not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Update event",
+                "description": "Update an existing event",
+                "operationId": "ca1f19a988fe9b1ee4af2f4ff3e724fe",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Event ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Updated Meeting"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Updated description"
+                                    },
+                                    "start_time": {
+                                        "type": "string",
+                                        "format": "datetime",
+                                        "example": "2025-11-16T10:00:00Z"
+                                    },
+                                    "end_time": {
+                                        "type": "string",
+                                        "format": "datetime",
+                                        "example": "2025-11-16T11:30:00Z"
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "Room B"
+                                    },
+                                    "is_all_day": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Event updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Updated Meeting"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Event not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Delete event",
+                "description": "Delete an event. All associated invites will also be deleted.",
+                "operationId": "54be98df9381a8b89013d29e170a31fe",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Event ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Event deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Event not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/events/{event_id}/invites": {
+            "get": {
+                "tags": [
+                    "Invites"
+                ],
+                "summary": "List event invites",
+                "description": "Get all invites for an event (event owner only)",
+                "operationId": "1d4fa4512e45858c45664dadde6ea5b9",
+                "parameters": [
+                    {
+                        "name": "event_id",
+                        "in": "path",
+                        "description": "Event ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of invites",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "invitee_email": {
+                                                        "type": "string",
+                                                        "example": "invitee@example.com"
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "pending",
+                                                            "accepted",
+                                                            "rejected"
+                                                        ],
+                                                        "example": "pending"
+                                                    },
+                                                    "user_id": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    },
+                                                    "event_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Not event owner"
+                    },
+                    "404": {
+                        "description": "Event not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Invites"
+                ],
+                "summary": "Invite user to event",
+                "description": "Send an invitation to a user for an event (event owner only). Queues an email notification.",
+                "operationId": "56c7fc937542cc16fa6eb4467c7a4da7",
+                "parameters": [
+                    {
+                        "name": "event_id",
+                        "in": "path",
+                        "description": "Event ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "invitee_email"
+                                ],
+                                "properties": {
+                                    "invitee_email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "colleague@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Invitation sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "invitee_email": {
+                                                    "type": "string",
+                                                    "example": "colleague@example.com"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "pending"
+                                                },
+                                                "event": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/invites/me": {
+            "get": {
+                "tags": [
+                    "Invites"
+                ],
+                "summary": "List my invites",
+                "description": "Get all event invites for the authenticated user",
+                "operationId": "badaee38602ff40316b290293ceaadc9",
+                "responses": {
+                    "200": {
+                        "description": "List of user's invites",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "invitee_email": {
+                                                        "type": "string",
+                                                        "example": "me@example.com"
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "pending"
+                                                    },
+                                                    "event": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "Team Meeting"
+                                                            },
+                                                            "start_time": {
+                                                                "type": "string",
+                                                                "format": "datetime"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/invites/{id}/accept": {
+            "post": {
+                "tags": [
+                    "Invites"
+                ],
+                "summary": "Accept invitation",
+                "description": "Accept an event invitation. Only the invitee can accept.",
+                "operationId": "be4bd612e5c0e5bb7f334160be813a0a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Invite ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invitation accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "accepted"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Not your invite"
+                    },
+                    "404": {
+                        "description": "Invite not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/invites/{id}/reject": {
+            "post": {
+                "tags": [
+                    "Invites"
+                ],
+                "summary": "Reject invitation",
+                "description": "Reject an event invitation. Only the invitee can reject.",
+                "operationId": "ca11095dae7acefc939b154bae0f7847",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Invite ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invitation rejected",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "rejected"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Not your invite"
+                    },
+                    "404": {
+                        "description": "Invite not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/invites/{id}": {
+            "delete": {
+                "tags": [
+                    "Invites"
+                ],
+                "summary": "Delete invitation",
+                "description": "Delete an event invitation (event owner only)",
+                "operationId": "6b26230945cd9e874c489a4d2021c499",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Invite ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Invitation deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Not event owner"
+                    },
+                    "404": {
+                        "description": "Invite not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Enter your Sanctum token",
+                "bearerFormat": "Sanctum",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "API endpoints for user authentication"
+        },
+        {
+            "name": "Calendars",
+            "description": "API endpoints for calendar management"
+        },
+        {
+            "name": "Events",
+            "description": "API endpoints for event management"
+        },
+        {
+            "name": "Invites",
+            "description": "API endpoints for event invitations"
+        }
+    ]
+}

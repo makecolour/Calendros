@@ -12,8 +12,6 @@ class Index extends Component
 
     public $search = '';
     public $statusFilter = '';
-    public $confirmingInviteDeletion = false;
-    public $inviteIdToDelete = null;
 
     public function updatingSearch()
     {
@@ -25,22 +23,13 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function confirmDelete($inviteId)
+    public function deleteInvite($inviteId)
     {
-        $this->confirmingInviteDeletion = true;
-        $this->inviteIdToDelete = $inviteId;
-    }
-
-    public function deleteInvite()
-    {
-        $invite = Invite::find($this->inviteIdToDelete);
+        $invite = Invite::find($inviteId);
         if ($invite) {
             $invite->delete();
             session()->flash('message', 'Invite deleted successfully.');
         }
-        
-        $this->confirmingInviteDeletion = false;
-        $this->inviteIdToDelete = null;
     }
 
     public function render()

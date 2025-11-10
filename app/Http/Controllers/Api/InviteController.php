@@ -16,7 +16,38 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class InviteController extends Controller
 {
     /**
-     * List invites for an event (event owner only)
+     * @OA\Get(
+     *     path="/events/{event_id}/invites",
+     *     tags={"Invites"},
+     *     summary="List event invites",
+     *     description="Get all invites for an event (event owner only)",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="event_id",
+     *         in="path",
+     *         required=true,
+     *         description="Event ID",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of invites",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="invitee_email", type="string", example="invitee@example.com"),
+     *                     @OA\Property(property="status", type="string", enum={"pending", "accepted", "rejected"}, example="pending"),
+     *                     @OA\Property(property="user_id", type="integer", example=2),
+     *                     @OA\Property(property="event_id", type="integer", example=1)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=403, description="Forbidden - Not event owner"),
+     *     @OA\Response(response=404, description="Event not found")
+     * )
      */
     public function index(Request $request, Event $event): AnonymousResourceCollection
     {
@@ -32,7 +63,32 @@ class InviteController extends Controller
     }
 
     /**
-     * List invites for the authenticated user
+     * @OA\Get(
+     *     path="/invites/me",
+     *     tags={"Invites"},
+     *     summary="List my invites",
+     *     description="Get all event invites for the authenticated user",
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of user's invites",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="invitee_email", type="string", example="me@example.com"),
+     *                     @OA\Property(property="status", type="string", example="pending"),
+     *                     @OA\Property(property="event", type="object",
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="title", type="string", example="Team Meeting"),
+     *                         @OA\Property(property="start_time", type="string", format="datetime")
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated")
+     * )
      */
     public function myInvites(Request $request): AnonymousResourceCollection
     {
@@ -46,7 +102,42 @@ class InviteController extends Controller
     }
 
     /**
-     * Invite a user to an event
+     * @OA\Post(
+     *     path="/events/{event_id}/invites",
+     *     tags={"Invites"},
+     *     summary="Invite user to event",
+     *     description="Send an invitation to a user for an event (event owner only). Queues an email notification.",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="event_id",
+     *         in="path",
+     *         required=true,
+     *         description="Event ID",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"invitee_email"},
+     *             @OA\Property(property="invitee_email", type="string", format="email", example="colleague@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Invitation sent successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=3),
+     *                 @OA\Property(property="invitee_email", type="string", example="colleague@example.com"),
+     *                 @OA\Property(property="status", type="string", example="pending"),
+     *                 @OA\Property(property="event", type="object")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
      */
     public function store(InviteUserRequest $request, Event $event): InviteResource
     {
@@ -70,7 +161,33 @@ class InviteController extends Controller
     }
 
     /**
-     * Accept an invitation
+     * @OA\Post(
+     *     path="/invites/{id}/accept",
+     *     tags={"Invites"},
+     *     summary="Accept invitation",
+     *     description="Accept an event invitation. Only the invitee can accept.",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Invite ID",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Invitation accepted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="status", type="string", example="accepted")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=403, description="Forbidden - Not your invite"),
+     *     @OA\Response(response=404, description="Invite not found")
+     * )
      */
     public function accept(Request $request, Invite $invite): InviteResource
     {
@@ -84,7 +201,33 @@ class InviteController extends Controller
     }
 
     /**
-     * Reject an invitation
+     * @OA\Post(
+     *     path="/invites/{id}/reject",
+     *     tags={"Invites"},
+     *     summary="Reject invitation",
+     *     description="Reject an event invitation. Only the invitee can reject.",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Invite ID",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Invitation rejected",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="status", type="string", example="rejected")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=403, description="Forbidden - Not your invite"),
+     *     @OA\Response(response=404, description="Invite not found")
+     * )
      */
     public function reject(Request $request, Invite $invite): InviteResource
     {
@@ -98,7 +241,27 @@ class InviteController extends Controller
     }
 
     /**
-     * Delete an invitation
+     * @OA\Delete(
+     *     path="/invites/{id}",
+     *     tags={"Invites"},
+     *     summary="Delete invitation",
+     *     description="Delete an event invitation (event owner only)",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Invite ID",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Invitation deleted successfully"
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=403, description="Forbidden - Not event owner"),
+     *     @OA\Response(response=404, description="Invite not found")
+     * )
      */
     public function destroy(Request $request, Invite $invite): JsonResponse
     {
