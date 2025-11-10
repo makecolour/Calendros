@@ -52,7 +52,7 @@ class InviteController extends Controller
     public function index(Request $request, Event $event): AnonymousResourceCollection
     {
         if ($event->calendar->user_id !== $request->user()->id) {
-            abort(403);
+            abort(403, "Only event owner can do view invites.");
         }
 
         $invites = $event->invites()
@@ -142,7 +142,7 @@ class InviteController extends Controller
     public function store(InviteUserRequest $request, Event $event): InviteResource
     {
         if ($event->calendar->user_id !== $request->user()->id) {
-            abort(403);
+            abort(403, 'Only event owner can send invitations.');
         }
 
         // Check if user exists
@@ -192,7 +192,7 @@ class InviteController extends Controller
     public function accept(Request $request, Invite $invite): InviteResource
     {
         if ($invite->user_id !== $request->user()->id) {
-            abort(403);
+            abort(403, "Only invitees can accept.");
         }
 
         $invite->accept();
@@ -232,7 +232,7 @@ class InviteController extends Controller
     public function reject(Request $request, Invite $invite): InviteResource
     {
         if ($invite->user_id !== $request->user()->id) {
-            abort(403);
+            abort(403, "Only the invitee can reject");
         }
 
         $invite->reject();
@@ -266,7 +266,7 @@ class InviteController extends Controller
     public function destroy(Request $request, Invite $invite): JsonResponse
     {
         if ($invite->event->calendar->user_id !== $request->user()->id) {
-            abort(403);
+            abort(403, "Only event owner can delete.");
         }
 
         $invite->delete();
