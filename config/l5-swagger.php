@@ -245,6 +245,13 @@ return [
         'generate_yaml_copy' => env('L5_SWAGGER_GENERATE_YAML_COPY', false),
 
         /*
+         * Set this to `true` to use CDN assets for Swagger UI instead of local vendor files
+         * This is the recommended approach for production to avoid 404 errors
+         * Uses: https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/
+         */
+        'use_cdn_assets' => env('L5_SWAGGER_USE_CDN_ASSETS', false),
+
+        /*
          * Edit to trust the proxy's ip address - needed for AWS Load Balancer
          * string[]
          */
