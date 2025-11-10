@@ -32,7 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Invite routes
     Route::get('/invites', [InviteController::class, 'myInvites']);
     Route::get('/events/{event}/invites', [InviteController::class, 'index']);
-    Route::post('/events/{event}/invite', [InviteController::class, 'store']);
+    Route::post('/events/{event}/invites', [InviteController::class, 'store']);
     Route::put('/invites/{invite}/accept', [InviteController::class, 'accept']);
     Route::put('/invites/{invite}/reject', [InviteController::class, 'reject']);
     Route::delete('/invites/{invite}', [InviteController::class, 'destroy']);
