@@ -64,7 +64,7 @@ class InviteController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/invites/me",
+     *     path="/invites",
      *     tags={"Invites"},
      *     summary="List my invites",
      *     description="Get all event invites for the authenticated user",
@@ -161,7 +161,7 @@ class InviteController extends Controller
     }
 
     /**
-     * @OA\Post(
+     * @OA\Put(
      *     path="/invites/{id}/accept",
      *     tags={"Invites"},
      *     summary="Accept invitation",
@@ -201,7 +201,7 @@ class InviteController extends Controller
     }
 
     /**
-     * @OA\Post(
+     * @OA\Put(
      *     path="/invites/{id}/reject",
      *     tags={"Invites"},
      *     summary="Reject invitation",

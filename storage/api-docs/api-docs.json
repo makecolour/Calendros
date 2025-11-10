@@ -10,15 +10,11 @@
     },
     "servers": [
         {
-            "url": "http://calendros.test/api",
+            "url": "http://localhost:8000/api",
             "description": "Local Development Server"
         },
         {
             "url": "https://prm.positive.io.vn/api",
-            "description": "Production Server"
-        },
-        {
-            "url": "https://calendros.montserrat.id.vn/api",
             "description": "Production Server"
         }
     ],
@@ -1337,14 +1333,14 @@
                 ]
             }
         },
-        "/invites/me": {
+        "/invites": {
             "get": {
                 "tags": [
                     "Invites"
                 ],
                 "summary": "List my invites",
                 "description": "Get all event invites for the authenticated user",
-                "operationId": "badaee38602ff40316b290293ceaadc9",
+                "operationId": "97d78ab79cc1e53e37d2481090fbd785",
                 "responses": {
                     "200": {
                         "description": "List of user's invites",
@@ -1407,13 +1403,13 @@
             }
         },
         "/invites/{id}/accept": {
-            "post": {
+            "put": {
                 "tags": [
                     "Invites"
                 ],
                 "summary": "Accept invitation",
                 "description": "Accept an event invitation. Only the invitee can accept.",
-                "operationId": "be4bd612e5c0e5bb7f334160be813a0a",
+                "operationId": "1d2606d55d34ca4102695af33a9282e2",
                 "parameters": [
                     {
                         "name": "id",
@@ -1470,13 +1466,13 @@
             }
         },
         "/invites/{id}/reject": {
-            "post": {
+            "put": {
                 "tags": [
                     "Invites"
                 ],
                 "summary": "Reject invitation",
                 "description": "Reject an event invitation. Only the invitee can reject.",
-                "operationId": "ca11095dae7acefc939b154bae0f7847",
+                "operationId": "f88e7f5db4544619664b17a1a7b13b13",
                 "parameters": [
                     {
                         "name": "id",
